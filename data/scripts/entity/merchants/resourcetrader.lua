@@ -28,6 +28,32 @@ function ResourceDepot.initialize()
         if faction and faction.isAIFaction then
             Sector():registerCallback("onRestoredFromDisk", "onRestoredFromDisk")
         end
+
+        if station.type == EntityType.Station then
+            local isplayerbuild = Faction().isPlayer or Faction().isAlliance
+
+            local x,y = Sector():getCoordinates()
+
+            local sx, sy = Player(1):getHomeSectorCoordinates()
+            local isInStartsector = false
+            if x == sx and y == sy then
+                isInStartsector = true
+            end
+
+            local hx, hy = faction:getHomeSectorCoordinates()
+            local isInFactionhome = false
+            if x == hx and y == hy then
+                isInFactionhome = true
+            end
+
+            if isplayerbuild or isInStartsector or isInFactionhome then
+                --print("Added Ref in:", x, y)
+                station:addScriptOnce("data/scripts/entity/merchants/refinery.lua")
+            else
+                --print("Removed Ref in:", x, y)
+                station:removeScript("data/scripts/entity/merchants/refinery.lua")
+            end
+        end
     end
 
     if onClient() and EntityIcon().icon == "" then
@@ -35,12 +61,6 @@ function ResourceDepot.initialize()
         InteractionText(station.index).text = Dialog.generateStationInteractionText(station, random())
     end
 
-
-    if station.type == EntityType.Station then
-        if Faction().isPlayer or Faction().isAlliance then
-            station:addScriptOnce("data/scripts/entity/merchants/refinery.lua")
-        end
-    end
 end
 
 
