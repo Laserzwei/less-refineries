@@ -22,8 +22,6 @@ function ResourceDepot.initialize()
         -- resource shortage
         shortageTimer = -random():getInt(15 * 60, 60 * 60)
 
-        math.randomseed(appTimeMs())
-
         local faction = Faction()
         if faction and faction.isAIFaction then
             Sector():registerCallback("onRestoredFromDisk", "onRestoredFromDisk")
@@ -47,17 +45,28 @@ function ResourceDepot.initialize()
             end
 
             if isplayerbuild or isInStartsector or isInFactionhome then
-                --print("Added Ref in:", x, y)
                 station:addScriptOnce("data/scripts/entity/merchants/refinery.lua")
             else
-                --print("Removed Ref in:", x, y)
-                station:removeScript("data/scripts/entity/merchants/refinery.lua")
+                math.randomseed(Sector().seed)
+                if  math.random(0,4) == 1 then --1 in 5
+                    station.title = "Resource Depot & Refining"%_t
+                    station:addScriptOnce("data/scripts/entity/merchants/refinery.lua")
+                else
+
+                    station:removeScript("data/scripts/entity/merchants/refinery.lua")
+                end
             end
         end
     end
 
-    if onClient() and EntityIcon().icon == "" then
-        EntityIcon().icon = "data/textures/icons/pixel/resources.png"
+    -- reset random
+    math.randomseed(appTimeMs())
+    if onClient() then
+        if station.title == "Resource Depot & Refining"%_t then
+            EntityIcon().icon = "data/textures/icons/pixel/combined-refining.png"
+        else
+            EntityIcon().icon = "data/textures/icons/pixel/resources.png"
+        end
         InteractionText(station.index).text = Dialog.generateStationInteractionText(station, random())
     end
 
