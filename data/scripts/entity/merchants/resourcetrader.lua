@@ -48,7 +48,7 @@ function ResourceDepot.initialize()
                 station:addScriptOnce("data/scripts/entity/merchants/refinery.lua")
             else
                 math.randomseed(Sector().seed)
-                if  math.random(0,4) == 1 then --1 in 5
+                if math.random(0,9) == 1 then --1 in 5
                     station.title = "Resource Depot & Refining"%_t
                     station:addScriptOnce("data/scripts/entity/merchants/refinery.lua")
                 else
