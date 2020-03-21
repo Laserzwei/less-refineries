@@ -45,6 +45,7 @@ function ResourceDepot.initialize()
             end
 
             if isplayerbuild or isInStartsector or isInFactionhome then
+                station.title = "Resource Depot & Refining"%_t
                 station:addScriptOnce("data/scripts/entity/merchants/refinery.lua")
             else
                 math.randomseed(Sector().seed)
