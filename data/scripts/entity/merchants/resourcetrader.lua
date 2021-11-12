@@ -69,7 +69,10 @@ function ResourceDepot.initialize()
         end
         InteractionText(station.index).text = Dialog.generateStationInteractionText(station, random())
     end
-
+    local gameversion = GameVersion()
+    if gameversion.major >= 2 and gameversion.minor >=0 and gameversion.patch >= 10 then
+        station:addScriptOnce("data/scripts/entity/merchants/resourcedepotbuildingknowledgemerchant.lua")
+    end
 end
 
 
